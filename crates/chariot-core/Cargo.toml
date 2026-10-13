@@ -1,0 +1,16 @@
+[package]
+name = "chariot-core"
+version = "0.0.0"
+edition.workspace = true
+license.workspace = true
+publish = false
+description = "Chariot core: members, tasks, actions, reservations, holds and the append-only event log."
+
+[dependencies]
+globset = "0.4.20"
+rusqlite = { version = "0.40.2", features = ["bundled"] }
+serde = { version = "1.0.229", features = ["derive"] }
+serde_json = "1.0.154"
+thiserror = "2.0.21"
+time = { version = "0.3.55", features = ["serde-well-known"] }
+uuid = { version = "1.28.0", features = ["v7"] }

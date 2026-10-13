@@ -1,6 +1,6 @@
 [workspace]
 resolver = "3"
-members = ["spikes/acp-gate", "spikes/board"]
+members = ["crates/chariot-core", "spikes/acp-gate", "spikes/board"]
 
 [workspace.package]
 edition = "2024"

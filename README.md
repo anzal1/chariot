@@ -35,3 +35,17 @@ node conform/conform.mjs onboard/specs/*.json
 ```
 
 They drive real Claude Code, OpenCode and Ollama on this machine and use real quota.
+
+## Stack (2026-10-13)
+
+Rust core, GPU UI. The spikes in [spikes/](spikes/) prove both on a real machine:
+
+| Spike | What it proved |
+|---|---|
+| [spikes/board](spikes/board/src/main.rs) | A GPUI Kit window (Zed's GPU UI framework) builds in ~50 s and runs with working components |
+| [spikes/acp-gate](spikes/acp-gate/src/main.rs) | The Rust ACP SDK drives OpenCode and Claude Code, sees every edit before it happens, denies edits to a reserved file and allows the rest |
+
+```sh
+cargo run -p board
+cargo run -p acp-gate -- "opencode acp" <workspace> <reserved file> "<prompt>"
+```

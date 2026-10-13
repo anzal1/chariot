@@ -1,0 +1,8 @@
+[package]
+name = "board"
+version = "0.0.0"
+edition.workspace = true
+publish = false
+
+[dependencies]
+gpui-kit = "0.7.3"

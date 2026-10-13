@@ -49,3 +49,8 @@ Rust core, GPU UI. The spikes in [spikes/](spikes/) prove both on a real machine
 cargo run -p board
 cargo run -p acp-gate -- "opencode acp" <workspace> <reserved file> "<prompt>"
 ```
+
+## Direction (2026-10-13)
+
+- **Autonomy:** a god model decides and manages by default: routing, splitting work, resolving what it can. Every decision is logged and explainable with `chariot why`, and only the five hold types reach the human. The model is a swappable member, so a better one can take the seat.
+- **The UI must be beautiful.** The spikes use the stock component look; the real board gets its own design (Geist and Geist Mono, subtle radii, restraint).

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>God Tier Architecture</title>
+  <title>Chariot Architecture</title>
   <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -55,7 +55,7 @@
 
   <div class="header">
     <p class="eyebrow">Architecture · v0 build plan · 2026-10-12</p>
-    <h1>God Tier: a harness of harnesses</h1>
+    <h1>Chariot: a harness of harnesses</h1>
     <p class="subtitle">One local layer that any harness, SDK, model CLI, API or website can join. It hands out tasks, keeps members from wiping each other's work, fails over when a subscription runs out, and checks what was really done. It has no model of its own and never holds anyone's keys.</p>
   </div>
 
@@ -64,9 +64,9 @@
     <h2>1. The whole system</h2>
     <p class="caption">You talk to the core through the board and the CLI. The core drives every member through a driver. Members that can use the shared tools work live in your repo under reservations; everything else works in its own sandbox copy and is merged only after the acceptance check.</p>
     <div class="diagram-container">
-      <svg viewBox="0 0 1000 616" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="gt-system-title gt-system-desc">
-        <title id="gt-system-title">God Tier system overview</title>
-        <desc id="gt-system-desc">Layered view: you send tasks to the core and answer its holds; the core keeps state in a local store, injects shared tools into live members and drives all members through drivers; live members edit the shared workspace while sandboxed members work in copies that merge after an acceptance check.</desc>
+      <svg viewBox="0 0 1000 616" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="ch-system-title ch-system-desc">
+        <title id="ch-system-title">Chariot system overview</title>
+        <desc id="ch-system-desc">Layered view: you send tasks to the core and answer its holds; the core keeps state in a local store, injects shared tools into live members and drives all members through drivers; live members edit the shared workspace while sandboxed members work in copies that merge after an acceptance check.</desc>
         <defs>
           <marker id="s-arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#5B6570"/></marker>
           <marker id="s-arrow-accent" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#E8552D"/></marker>
@@ -110,7 +110,7 @@
         <rect x="408" y="46" width="28" height="12" rx="2" fill="transparent" stroke="rgba(139,147,161,0.5)" stroke-width="0.8"/>
         <text x="422" y="55" fill="#8B93A1" font-size="7" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">USER</text>
         <text x="500" y="68" fill="#15181C" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">You</text>
-        <text x="500" y="84" fill="#5B6570" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">gt board · add · run · ok · why</text>
+        <text x="500" y="84" fill="#5B6570" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">chariot board · add · run · ok · why</text>
 
         <!-- Core (focal) -->
         <rect x="240" y="128" width="520" height="80" rx="6" fill="#faf8f5"/>
@@ -203,11 +203,11 @@
   <!-- ============================ 2. CORE ============================ -->
   <section>
     <h2>2. Inside the core: one task, start to finish</h2>
-    <p class="caption">Every task passes the same four stations. Four of them can raise a hold, which is the only way the system ever asks you anything. Everything is written to the event log, so <code>gt why</code> can explain any decision.</p>
+    <p class="caption">Every task passes the same four stations. Four of them can raise a hold, which is the only way the system ever asks you anything. Everything is written to the event log, so <code>chariot why</code> can explain any decision.</p>
     <div class="diagram-container">
-      <svg viewBox="0 64 1000 492" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="gt-core-title gt-core-desc">
-        <title id="gt-core-title">Core task pipeline</title>
-        <desc id="gt-core-desc">A task passes an intake contradiction check, a dispatcher fed by the quota meter, the chosen member working under reservations, and an independent acceptance check; contradictions, quota limits, held edits and failed checks become holds for the user, and every step is recorded in the event log.</desc>
+      <svg viewBox="0 64 1000 492" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="ch-core-title ch-core-desc">
+        <title id="ch-core-title">Core task pipeline</title>
+        <desc id="ch-core-desc">A task passes an intake contradiction check, a dispatcher fed by the quota meter, the chosen member working under reservations, and an independent acceptance check; contradictions, quota limits, held edits and failed checks become holds for the user, and every step is recorded in the event log.</desc>
         <defs>
           <marker id="c-arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#5B6570"/></marker>
           <marker id="c-arrow-accent" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#E8552D"/></marker>
@@ -315,7 +315,7 @@
         <rect x="112" y="438" width="24" height="12" rx="2" fill="transparent" stroke="rgba(91,101,112,0.5)" stroke-width="0.8"/>
         <text x="124" y="447" fill="#5B6570" font-size="7" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">LOG</text>
         <text x="508" y="456" fill="#15181C" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Event log</text>
-        <text x="508" y="472" fill="#5B6570" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">every task, claim, check and answer is recorded · gt why reads it</text>
+        <text x="508" y="472" fill="#5B6570" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">every task, claim, check and answer is recorded · chariot why reads it</text>
 
         <!-- Legend -->
         <line x1="40" y1="508" x2="960" y2="508" stroke="rgba(21,24,28,0.10)" stroke-width="0.8"/>
@@ -339,11 +339,11 @@
   <!-- ============================ 3. ONBOARDING ============================ -->
   <section>
     <h2>3. Onboarding: how anything becomes a member</h2>
-    <p class="caption"><code>gt add &lt;anything&gt;</code>. Protocol speakers go straight to a bridge. Everything else goes to the onboarding agent, which reads the help text, README or page and writes a driver spec. Nothing is enrolled until it passes conformance, and a version change or rising failures send it back for repair.</p>
+    <p class="caption"><code>chariot add &lt;anything&gt;</code>. Protocol speakers go straight to a bridge. Everything else goes to the onboarding agent, which reads the help text, README or page and writes a driver spec. Nothing is enrolled until it passes conformance, and a version change or rising failures send it back for repair.</p>
     <div class="diagram-container">
-      <svg viewBox="0 0 1000 400" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="gt-onboard-title gt-onboard-desc">
-        <title id="gt-onboard-title">Onboarding pipeline</title>
-        <desc id="gt-onboard-desc">Any surface is classified; protocol speakers bridge straight to a driver spec, others go through the onboarding agent which writes one; the spec must pass conformance before the member is enrolled, failures and later updates loop back to the agent for repair.</desc>
+      <svg viewBox="0 0 1000 400" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="ch-onboard-title ch-onboard-desc">
+        <title id="ch-onboard-title">Onboarding pipeline</title>
+        <desc id="ch-onboard-desc">Any surface is classified; protocol speakers bridge straight to a driver spec, others go through the onboarding agent which writes one; the spec must pass conformance before the member is enrolled, failures and later updates loop back to the agent for repair.</desc>
         <defs>
           <marker id="o-arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#5B6570"/></marker>
           <marker id="o-arrow-accent" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#E8552D"/></marker>
@@ -493,7 +493,7 @@
           <li>Intake check and acceptance check</li>
           <li>Quota meter and failover</li>
           <li>Sandbox + merge, website doors</li>
-          <li>Board and <code>gt.yaml</code></li>
+          <li>Board and <code>chariot.yaml</code></li>
         </ol>
       </div>
       <div class="card">
@@ -511,7 +511,7 @@
   </section>
 
   <div class="footer">
-    <span>God Tier · harness of harnesses · design draft</span>
+    <span>Chariot · harness of harnesses · design draft</span>
     <span>Source: ARCHITECTURE.md, ABSTRACTIONS.md</span>
   </div>
 </div>

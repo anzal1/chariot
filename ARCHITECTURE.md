@@ -1,6 +1,6 @@
-# God Tier: architecture
+# Chariot: architecture
 
-Status: design draft, 2026-10-12. Nothing built yet. Working names throughout; naming comes later with a collision check.
+Status: design draft, 2026-10-12. Nothing built yet. Named Chariot on 2026-10-13: every agent is a harnessed horse, the chariot makes them pull one load, and you hold the reins.
 
 One layer that every harness, model, SDK, tool, service and human can join, so they work as one team without stepping on each other. It never thinks for itself and never holds anyone's keys. It hands work to the best member, carries context between them, keeps every action on a shared record, and makes sure each subscription is only ever used through its own harness.
 
@@ -74,14 +74,14 @@ Seven layers. Each talks only to its neighbours.
 | World | What members act on: files, browser, APIs, mail, devices |
 | Event log | Everything that happens, append-only, under all of it |
 
-## 4. The protocol (working name GT/1)
+## 4. The protocol (working name Chariot/1)
 
 ### 4.1 Principles
 
 - **Transport is borrowed.** JSON-RPC 2.0 over stdio, WebSocket or HTTP, the same as ACP and MCP. No new wire format.
 - **Small required core, everything else optional.** A member declares what it supports in its manifest. The core adapts.
-- **Semantics, not plumbing.** GT/1 defines meanings: task, result, action, resource, reservation, quota, evidence. Those are exactly what ACP, MCP and A2A leave undefined.
-- **Maps both ways.** Every GT/1 concept has a defined mapping to ACP, MCP and A2A (section 4.7), so GT/1 can ship as an extension profile of those, not as a fifteenth standard.
+- **Semantics, not plumbing.** Chariot/1 defines meanings: task, result, action, resource, reservation, quota, evidence. Those are exactly what ACP, MCP and A2A leave undefined.
+- **Maps both ways.** Every Chariot/1 concept has a defined mapping to ACP, MCP and A2A (section 4.7), so Chariot/1 can ship as an extension profile of those, not as a fifteenth standard.
 
 ### 4.2 Levels
 
@@ -189,7 +189,7 @@ Reservations take a resource pattern, a mode (`read`, `write`, `exclusive`) and 
 
 ### 4.7 Mapping to existing protocols
 
-| GT/1 | ACP | MCP | A2A |
+| Chariot/1 | ACP | MCP | A2A |
 |---|---|---|---|
 | `session.open` | `session/new` (with `mcpServers` for shared tools) | n/a | Task with `contextId` |
 | `task.run` | `session/prompt` | `tools/call` on an agent-as-tool, or a Tasks extension task | `message/send` |
@@ -199,26 +199,26 @@ Reservations take a resource pattern, a mode (`read`, `write`, `exclusive`) and 
 | `result` | Prompt response `stopReason` | Tool result | Completed task with artifacts |
 | Manifest | `initialize` capabilities, `_meta` extension | Server capabilities | Agent Card plus an extension |
 
-So a member that speaks ACP is GT/1 L2 through a thin bridge, an MCP agent-as-tool is L0 or L1, and an A2A agent is L0 or L1. Extra GT/1 fields travel in each protocol's own extension slot (`_meta` in ACP and MCP, extensions in A2A Agent Cards), so nothing breaks for tools that ignore them.
+So a member that speaks ACP is Chariot/1 L2 through a thin bridge, an MCP agent-as-tool is L0 or L1, and an A2A agent is L0 or L1. Extra Chariot/1 fields travel in each protocol's own extension slot (`_meta` in ACP and MCP, extensions in A2A Agent Cards), so nothing breaks for tools that ignore them.
 
 ## 5. Three ways to teach the protocol
 
 | Path | Who | How |
 |---|---|---|
-| Native | New harnesses and SDKs that want to join properly | A small SDK (TypeScript, Python, Rust) implementing GT/1 directly. Minimal member is about 30 lines |
+| Native | New harnesses and SDKs that want to join properly | A small SDK (TypeScript, Python, Rust) implementing Chariot/1 directly. Minimal member is about 30 lines |
 | Translated | Everything that already exists | A driver (section 6). Nothing changes on the member's side |
 | In context | Models and agents, even ones with no integration | A skill file plus shared tools injected at session start. The model learns the rules from text: claim before editing, report evidence, post to the inbox, write to memory |
 
-The in-context path matters most for reach. Any harness that loads MCP servers and reads instruction files can follow GT/1 conventions without any code change, because the conventions live in the tools and the skill file:
+The in-context path matters most for reach. Any harness that loads MCP servers and reads instruction files can follow Chariot/1 conventions without any code change, because the conventions live in the tools and the skill file:
 
 ```
-gt.claim(resource, mode, ttl)      reserve before you change something
-gt.release(resource)
-gt.memory.read(query) / gt.memory.write(entry)
-gt.inbox.send(member, text) / gt.inbox.read()
-gt.board.update(task_id, status, note)
-gt.handoff(task_id, to_skill, pack)
-gt.evidence(task_id, kind, ref)    tests run, sources, screenshots
+chariot.claim(resource, mode, ttl)      reserve before you change something
+chariot.release(resource)
+chariot.memory.read(query) / chariot.memory.write(entry)
+chariot.inbox.send(member, text) / chariot.inbox.read()
+chariot.board.update(task_id, status, note)
+chariot.handoff(task_id, to_skill, pack)
+chariot.evidence(task_id, kind, ref)    tests run, sources, screenshots
 ```
 
 **Tested 2026-10-12** (36 runs: Claude Code with Haiku 5.5 and Sonnet 5.5, OpenCode with a free model; a file reserved by another agent; normal and "urgent, finish everything" framing):
@@ -232,7 +232,7 @@ Lessons that change the design:
 
 1. **Rules must travel in the instruction channel, not in tool descriptions.** Claude Code defers MCP tools: the model sees only their names until it searches for them, so rules written in descriptions never reached it (0/12). OpenCode loads descriptions eagerly and followed them 5/6. The core therefore delivers the rules through the instruction file (`CLAUDE.md`, `AGENTS.md`) or the session's system prompt, and keeps tool descriptions as backup.
 2. **Urgency did not break compliance** once the rules were in the instruction channel. Agents finished the free part, refused the reserved part, messaged the holder, and told the user exactly what was blocked.
-3. **Blocked agents poll.** Under pressure, one agent kept re-claiming the reserved file until the 300 s timeout. GT/1 needs `gt.wait(resource)` (notify on release) and a rule: when blocked, finish the rest, report, and stop.
+3. **Blocked agents poll.** Under pressure, one agent kept re-claiming the reserved file until the 300 s timeout. Chariot/1 needs `chariot.wait(resource)` (notify on release) and a rule: when blocked, finish the rest, report, and stop.
 4. **A free model matched Sonnet** under the skill file, so the in-context path does not depend on a frontier model.
 5. **Soft rules need a hard backstop.** Members that never received the rules violated almost every time. In-context teaching is the soft layer; L2 gating in the core remains the enforcement layer.
 
@@ -266,7 +266,7 @@ Design consequences:
 
 1. Intake runs every new task against every in-flight task through a cheap judge member before dispatch. A flag goes to the human with the question to decide; members never settle contradictions.
 2. Acceptance belongs to the core. Done criteria are checked literally against the final state by an independent verifier member after all members finish, and the board shows that verdict, not the members' summaries.
-3. Onboarding is the default path, not a fallback. `gt add <thing>` runs the onboarding agent, then conformance, then enrollment.
+3. Onboarding is the default path, not a fallback. `chariot add <thing>` runs the onboarding agent, then conformance, then enrollment.
 
 For a bare model with no harness at all (an API key, a local Ollama model), the core runs it inside a minimal reference harness so it can still be a member.
 
@@ -276,7 +276,7 @@ For a bare model with no harness at all (an API key, a local Ollama model), the 
 
 | Tier | Member speaks | Driver does | Typical level reached |
 |---|---|---|---|
-| Native | GT/1 | Nothing | Up to L4 |
+| Native | Chariot/1 | Nothing | Up to L4 |
 | Bridged | ACP, MCP, A2A, OpenAI-compatible HTTP | Protocol mapping (section 4.7) | ACP: L2 to L3. MCP and A2A: L0 to L1 |
 | Headless CLI | JSON or text from a non-interactive mode | Starts the process, maps output lines to events | L1, sometimes L2 through hooks |
 | Terminal | An interactive TUI | Runs it in a virtual terminal, types input, reads the screen | L0 to L1 |
@@ -316,14 +316,14 @@ flowchart LR
 | Step | What happens |
 |---|---|
 | Discover | Scan for candidates: binaries on PATH, harness config folders, running Ollama, the ACP registry, MCP configs, anything you point it at |
-| Classify | Work out what the candidate speaks: GT/1, ACP, MCP, A2A, OpenAI-compatible, headless CLI, TUI, GUI |
+| Classify | Work out what the candidate speaks: Chariot/1, ACP, MCP, A2A, OpenAI-compatible, headless CLI, TUI, GUI |
 | Bind | Use an existing bridge if one fits. Otherwise the onboarding agent (itself a member) reads the docs and `--help`, probes in a sandbox, and writes a driver spec |
 | Certify | Run the conformance suite in a scratch workspace. The certified level is the highest one passed |
 | Calibrate | A placement exam built from your own history: tasks you already did, with known good outcomes. This seeds the scoreboard, so a new member does not start blind |
 | Enroll | Manifest written to the registry. The member shows up on the board |
 | Watch | Detect version changes and rising failure rates. Re-certify, repair the driver, or quarantine the member until fixed |
 
-Target experience: `gt add <anything>` and about two minutes later the member is enrolled with a certified level and a first score.
+Target experience: `chariot add <anything>` and about two minutes later the member is enrolled with a certified level and a first score.
 
 ### 6.4 Conformance suite
 
@@ -427,7 +427,7 @@ sequenceDiagram
 | Surface | What it is |
 |---|---|
 | Task board | The main view. Tasks, who has them, live timeline, holds waiting on you, quota bars |
-| CLI | `gt add`, `gt run`, `gt board`, `gt why <task>` |
+| CLI | `chariot add`, `chariot run`, `chariot board`, `chariot why <task>` |
 | ACP up-link | The whole council appears as one ACP agent inside Zed, JetBrains or any ACP client |
 | MCP up-link | Any harness can call the council as tools: `council.run`, `council.review` |
 | A2A up-link | Remote agents and other machines can send tasks in |
@@ -453,19 +453,19 @@ One SQLite database plus an append-only event log, all local:
 
 | Risk | Answer in this design |
 |---|---|
-| A new protocol nobody adopts | Adoption is not required. Bridges and drivers cover everything, and GT/1 ships as extension profiles of ACP, MCP and A2A |
+| A new protocol nobody adopts | Adoption is not required. Bridges and drivers cover everything, and Chariot/1 ships as extension profiles of ACP, MCP and A2A |
 | Vendors break drivers | Drivers are data, certified on every version change, repaired by the onboarding agent, quarantined if broken |
 | Vendors flag automated use | Official surfaces only, human pace, no token handling |
 | Routing barely beats one strong agent | The dispatcher suggests by default. Auto mode is earned per task kind with evidence. The core's value does not depend on routing: failover, review and safety stand alone |
 | Handoffs lose the reasoning | Handoff packs carry decisions and why. One writer per resource. Reviewers get a clean context on purpose |
-| Hard to debug across layers | One event log per task, one timeline view, `gt why` |
+| Hard to debug across layers | One event log per task, one timeline view, `chariot why` |
 | Cold start for scores | The calibration exam from your own history |
 | Shared tools become an injection hub | The guard on every crossing, and the policy engine on what injected tools may do |
 | Latency of handoffs | Warm sessions kept open per member. Handoffs only at task boundaries |
 
 ## 12. Build order (when we decide to build)
 
-1. GT/1 types, event log, registry.
+1. Chariot/1 types, event log, registry.
 2. Bridged drivers: Claude Code and OpenCode over ACP, Codex over ACP or headless.
 3. Task board (read-only timeline first).
 4. Quota service and failover.

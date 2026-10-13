@@ -1,4 +1,6 @@
-# god-tier
+# Chariot
+
+Every AI agent you use is a harnessed horse. Chariot is what makes them pull one load, with you holding the reins.
 
 A harness of harnesses: one local layer that any harness, SDK, model CLI, API or website can join. It hands out tasks, keeps members from wiping each other's work, fails over when a subscription runs out, and checks what was really done. It has no model of its own and never holds anyone's keys.
 
@@ -6,8 +8,8 @@ Status: design, tested, not built yet.
 
 | File | What it is |
 |---|---|
-| [ARCHITECTURE.md](ARCHITECTURE.md) | The engine: core, protocol (GT/1), drivers, onboarding, every test result |
-| [ABSTRACTIONS.md](ABSTRACTIONS.md) | The user and developer layer on top: member, task, hold, rule; `gt.yaml`; extension points |
+| [ARCHITECTURE.md](ARCHITECTURE.md) | The engine: core, protocol (Chariot/1), drivers, onboarding, every test result |
+| [ABSTRACTIONS.md](ABSTRACTIONS.md) | The user and developer layer on top: member, task, hold, rule; `chariot.yaml`; extension points |
 | [diagrams/architecture.html](diagrams/architecture.html) | The architecture as diagrams |
 | [experiments/](experiments/) | The rigs behind every number in the docs |
 

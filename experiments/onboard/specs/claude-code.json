@@ -1,0 +1,17 @@
+{
+  "id": "claude-code",
+  "kind": "harness",
+  "start": ["claude", "-p", "--model", "claude-haiku-5-5", "--output-format", "stream-json", "--verbose", "--permission-mode", "acceptEdits", "--permission-prompts", "none", "--no-session-persistence", "{prompt}"],
+  "env": {},
+  "output": "jsonl",
+  "events": [
+    {"when": {"type": "result"}, "emit": "result", "text": "result"},
+    {"when": {"type": "assistant", "message.content.0.type": "tool_use"}, "emit": "tool.call", "text": "message.content.0.name"},
+    {"when": {"type": "assistant", "message.content.0.type": "text"}, "emit": "message", "text": "message.content.0.text"},
+    {"when": {"type": "assistant"}, "emit": "ignore"},
+    {"when": {"type": "user"}, "emit": "ignore"},
+    {"when": {"type": "system"}, "emit": "ignore"},
+    {"when": {"type": "rate_limit_event"}, "emit": "ignore"}
+  ],
+  "result": {"text": "result"}
+}

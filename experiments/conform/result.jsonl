@@ -1,0 +1,3 @@
+{"id":"claude-code","kind":"harness","output":"jsonl","L0":true,"detail":{"fileOk":true,"result":"done","ms":7635,"stderr":"[claude-code:unrecognized_model] {\"model\":\"claude-haiku-5-5\",\"query_source\":\"sdk\"}\n"},"L1":true,"event_counts":{"tool.call":1,"message":1,"result":1}}
+{"id":"opencode","kind":"harness","output":"jsonl","L0":true,"detail":{"fileOk":true,"result":"done","ms":4788,"stderr":""},"L1":true,"event_counts":{"tool.call":1,"usage":2,"result":1}}
+{"id":"ollama-cybersecqwen","kind":"model","output":"text","L0":true,"detail":{"result":"pong\n\n","ms":67}}

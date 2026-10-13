@@ -1,0 +1,10 @@
+{
+  "name": "god-tier-experiments",
+  "private": true,
+  "description": "Test rigs behind the god-tier design: in-context rules, live two-agent trials, intake check, acceptance check, onboarding conformance",
+  "dependencies": {
+    "@agentclientprotocol/sdk": "1.8.0",
+    "@modelcontextprotocol/sdk": "1.32.1",
+    "zod": "4.6.6"
+  }
+}

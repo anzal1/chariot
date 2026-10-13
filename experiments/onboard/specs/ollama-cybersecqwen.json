@@ -1,0 +1,8 @@
+{
+  "id": "ollama-cybersecqwen",
+  "kind": "model",
+  "start": ["ollama", "run", "hf.co/mradermacher/CyberSecQwen-4B-GGUF:Q8_0", "--hidethinking", "--nowordwrap", "{prompt}"],
+  "env": {"OLLAMA_NOHISTORY": "1"},
+  "output": "text",
+  "result": {}
+}

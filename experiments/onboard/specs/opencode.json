@@ -1,0 +1,14 @@
+{
+  "id": "opencode",
+  "kind": "harness",
+  "start": ["opencode", "run", "--pure", "--dir", "{workspace}", "--format", "json", "-m", "opencode/space-bunny-free", "{prompt}"],
+  "env": {},
+  "output": "jsonl",
+  "events": [
+    {"when": {"type": "tool_use"}, "emit": "tool.call", "text": "part.tool"},
+    {"when": {"type": "text"}, "emit": "result", "text": "part.text"},
+    {"when": {"type": "step_finish"}, "emit": "usage"},
+    {"when": {"type": "step_start"}, "emit": "ignore"}
+  ],
+  "result": {"text": "part.text"}
+}

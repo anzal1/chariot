@@ -1,0 +1,66 @@
+{
+ "who": "opencode",
+ "log": [
+  {
+   "t": 447,
+   "kind": "init",
+   "agent": "OpenCode",
+   "version": "1.18.33",
+   "caps": [
+    "loadSession",
+    "mcpCapabilities",
+    "promptCapabilities",
+    "sessionCapabilities"
+   ]
+  },
+  {
+   "t": 3451,
+   "kind": "execute",
+   "id": "call_01a12fc9a3eb77db98d85e06",
+   "title": "bash",
+   "status": "pending"
+  },
+  {
+   "t": 3451,
+   "kind": "execute",
+   "id": "call_01a12fc9a3eb77db98d85e06",
+   "title": "echo gamma > shell.txt",
+   "status": "in_progress"
+  },
+  {
+   "t": 3465,
+   "kind": "execute",
+   "title": "echo gamma > shell.txt",
+   "options": [
+    "allow_once",
+    "allow_always",
+    "reject_once"
+   ]
+  },
+  {
+   "t": 3472,
+   "kind": "execute",
+   "id": "call_01a12fc9a3eb77db98d85e06",
+   "title": "echo gamma > shell.txt",
+   "status": "in_progress"
+  },
+  {
+   "t": 3489,
+   "id": "call_01a12fc9a3eb77db98d85e06",
+   "title": "echo gamma > shell.txt",
+   "status": "completed"
+  },
+  {
+   "t": 4809,
+   "kind": "done",
+   "stopReason": "end_turn"
+  }
+ ],
+ "changed": [
+  "shell.txt"
+ ],
+ "routedThroughGovernor": [],
+ "bypassedGovernor": [
+  "shell.txt"
+ ]
+}

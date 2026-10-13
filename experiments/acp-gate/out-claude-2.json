@@ -1,0 +1,84 @@
+{
+ "who": "claude",
+ "log": [
+  {
+   "t": 72,
+   "kind": "init",
+   "agent": "@zed-industries/claude-agent-acp",
+   "version": "0.23.1",
+   "caps": [
+    "_meta",
+    "promptCapabilities",
+    "mcpCapabilities",
+    "loadSession",
+    "sessionCapabilities"
+   ]
+  },
+  {
+   "t": 4433,
+   "kind": "other",
+   "id": "toolu_01KvZzXqRS28mRMJ58rmmig9",
+   "title": "ToolSearch",
+   "status": "pending"
+  },
+  {
+   "t": 4813,
+   "kind": "other",
+   "id": "toolu_01KvZzXqRS28mRMJ58rmmig9",
+   "title": "ToolSearch"
+  },
+  {
+   "t": 4822,
+   "id": "toolu_01KvZzXqRS28mRMJ58rmmig9"
+  },
+  {
+   "t": 4827,
+   "id": "toolu_01KvZzXqRS28mRMJ58rmmig9",
+   "status": "completed"
+  },
+  {
+   "t": 6210,
+   "kind": "execute",
+   "id": "toolu_01KXzmACv1QTg8JJUFLQZoAT",
+   "title": "Terminal",
+   "status": "pending"
+  },
+  {
+   "t": 6710,
+   "kind": "execute",
+   "id": "toolu_01KXzmACv1QTg8JJUFLQZoAT",
+   "title": "echo gamma > shell.txt"
+  },
+  {
+   "t": 6724,
+   "kind": "execute",
+   "title": "echo gamma > shell.txt",
+   "options": [
+    "allow_always",
+    "allow_once",
+    "reject_once"
+   ]
+  },
+  {
+   "t": 7181,
+   "id": "toolu_01KXzmACv1QTg8JJUFLQZoAT"
+  },
+  {
+   "t": 7182,
+   "id": "toolu_01KXzmACv1QTg8JJUFLQZoAT",
+   "status": "completed"
+  },
+  {
+   "t": 8935,
+   "kind": "done",
+   "stopReason": "end_turn"
+  }
+ ],
+ "changed": [
+  "shell.txt"
+ ],
+ "routedThroughGovernor": [],
+ "bypassedGovernor": [
+  "shell.txt"
+ ]
+}

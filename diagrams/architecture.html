@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>God Tier Architecture</title>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --color-paper: #faf8f5;
+      --color-paper-2: #f1ede7;
+      --color-ink: #15181C;
+      --color-muted: #5B6570;
+      --color-soft: #8B93A1;
+      --color-rule: rgba(21,24,28,0.12);
+      --color-accent: #E8552D;
+      --color-link: #2E5AA8;
+      --font-sans: 'Geist', system-ui, sans-serif;
+      --font-serif: 'Instrument Serif', 'Times New Roman', serif;
+      --font-mono: 'Geist Mono', ui-monospace, Menlo, monospace;
+    }
+    body { font-family: var(--font-sans); background: var(--color-paper); color: var(--color-ink); padding: 3rem 2rem; }
+    .container { max-width: 1120px; margin: 0 auto; }
+    .header { margin-bottom: 2.5rem; }
+    .eyebrow { font-family: var(--font-mono); font-size: 0.66rem; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; color: var(--color-muted); margin-bottom: 0.75rem; }
+    h1 { font-family: var(--font-serif); font-size: clamp(1.75rem, 3vw + 1rem, 2.5rem); font-weight: 400; letter-spacing: -0.02em; line-height: 1.1; margin-bottom: 0.5rem; }
+    .subtitle { font-size: 1rem; line-height: 1.55; color: var(--color-muted); max-width: 64ch; }
+    section { margin-top: 3rem; }
+    h2 { font-family: var(--font-serif); font-size: 1.5rem; font-weight: 400; margin-bottom: 0.25rem; }
+    .caption { color: var(--color-muted); font-size: 0.875rem; line-height: 1.55; max-width: 72ch; margin-bottom: 1rem; }
+    .diagram-container { overflow-x: auto; }
+    svg { width: 100%; min-width: 900px; display: block; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.8125rem; background: #ffffff; border: 1px solid var(--color-rule); border-radius: 6px; overflow: hidden; }
+    th { font-family: var(--font-mono); font-size: 0.66rem; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--color-muted); text-align: left; padding: 0.75rem; border-bottom: 1px solid var(--color-rule); background: var(--color-paper-2); }
+    td { padding: 0.7rem 0.75rem; border-bottom: 1px solid rgba(21,24,28,0.06); vertical-align: top; line-height: 1.5; color: var(--color-muted); }
+    td:first-child { color: var(--color-ink); font-weight: 600; white-space: nowrap; }
+    tr:last-child td { border-bottom: none; }
+    .cards { display: grid; grid-template-columns: 1.15fr 1fr 0.9fr; gap: 1rem; margin-top: 1rem; }
+    @media (max-width: 860px) { .cards { grid-template-columns: 1fr; } }
+    .card { background: #ffffff; border-radius: 6px; border: 1px solid var(--color-rule); padding: 1.25rem; }
+    .card-eyebrow { font-family: var(--font-mono); font-size: 0.62rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--color-soft); margin-bottom: 0.5rem; }
+    .card-header { display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.875rem; padding-bottom: 0.875rem; border-bottom: 1px solid rgba(21,24,28,0.08); }
+    .card-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+    .card-dot.coral { background: var(--color-accent); } .card-dot.ink { background: var(--color-ink); } .card-dot.muted { background: var(--color-muted); }
+    .card h3 { font-size: 0.875rem; font-weight: 600; }
+    .card ul, .card ol { color: var(--color-muted); font-size: 0.8125rem; line-height: 1.55; padding-left: 1.1rem; }
+    .card li { margin-bottom: 0.3rem; }
+    .num { font-family: var(--font-mono); color: var(--color-ink); }
+    .footer { margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid rgba(21,24,28,0.10); font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.06em; color: var(--color-soft); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem; }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <p class="eyebrow">Architecture · v0 build plan · 2026-10-12</p>
+    <h1>God Tier: a harness of harnesses</h1>
+    <p class="subtitle">One local layer that any harness, SDK, model CLI, API or website can join. It hands out tasks, keeps members from wiping each other's work, fails over when a subscription runs out, and checks what was really done. It has no model of its own and never holds anyone's keys.</p>
+  </div>
+
+  <!-- ============================ 1. SYSTEM ============================ -->
+  <section>
+    <h2>1. The whole system</h2>
+    <p class="caption">You talk to the core through the board and the CLI. The core drives every member through a driver. Members that can use the shared tools work live in your repo under reservations; everything else works in its own sandbox copy and is merged only after the acceptance check.</p>
+    <div class="diagram-container">
+      <svg viewBox="0 0 1000 616" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="gt-system-title gt-system-desc">
+        <title id="gt-system-title">God Tier system overview</title>
+        <desc id="gt-system-desc">Layered view: you send tasks to the core and answer its holds; the core keeps state in a local store, injects shared tools into live members and drives all members through drivers; live members edit the shared workspace while sandboxed members work in copies that merge after an acceptance check.</desc>
+        <defs>
+          <marker id="s-arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#5B6570"/></marker>
+          <marker id="s-arrow-accent" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#E8552D"/></marker>
+        </defs>
+        <rect width="100%" height="100%" fill="#faf8f5"/>
+
+        <!-- arrows first -->
+        <line x1="468" y1="96" x2="468" y2="124" stroke="#5B6570" stroke-width="1.2" marker-end="url(#s-arrow)"/>
+        <rect x="400" y="104" width="60" height="12" rx="2" fill="#faf8f5"/>
+        <text x="456" y="113" fill="#8B93A1" font-size="8" font-family="'Geist Mono', monospace" text-anchor="end" letter-spacing="0.06em">TASKS</text>
+        <line x1="532" y1="128" x2="532" y2="100" stroke="#5B6570" stroke-width="1.2" stroke-dasharray="4,3" marker-end="url(#s-arrow)"/>
+        <rect x="540" y="104" width="40" height="12" rx="2" fill="#faf8f5"/>
+        <text x="544" y="113" fill="#8B93A1" font-size="8" font-family="'Geist Mono', monospace" letter-spacing="0.06em">HOLDS</text>
+
+        <line x1="760" y1="168" x2="796" y2="168" stroke="#5B6570" stroke-width="1.2" marker-end="url(#s-arrow)"/>
+
+        <line x1="360" y1="208" x2="360" y2="252" stroke="#5B6570" stroke-width="1.2" marker-end="url(#s-arrow)"/>
+        <rect x="368" y="224" width="52" height="12" rx="2" fill="#faf8f5"/>
+        <text x="372" y="233" fill="#8B93A1" font-size="8" font-family="'Geist Mono', monospace" letter-spacing="0.06em">INJECTS</text>
+        <line x1="640" y1="208" x2="640" y2="252" stroke="#5B6570" stroke-width="1.2" marker-end="url(#s-arrow)"/>
+        <rect x="648" y="224" width="44" height="12" rx="2" fill="#faf8f5"/>
+        <text x="652" y="233" fill="#8B93A1" font-size="8" font-family="'Geist Mono', monospace" letter-spacing="0.06em">DRIVES</text>
+
+        <line x1="360" y1="312" x2="360" y2="356" stroke="#5B6570" stroke-width="1.2" marker-end="url(#s-arrow)"/>
+        <rect x="280" y="328" width="72" height="12" rx="2" fill="#faf8f5"/>
+        <text x="348" y="337" fill="#8B93A1" font-size="8" font-family="'Geist Mono', monospace" text-anchor="end" letter-spacing="0.06em">RULES + TOOLS</text>
+        <path d="M 568,312 V 328 Q 568,336 560,336 H 448 Q 440,336 440,344 V 356" fill="none" stroke="#5B6570" stroke-width="1.2" marker-end="url(#s-arrow)"/>
+        <line x1="712" y1="312" x2="712" y2="356" stroke="#5B6570" stroke-width="1.2" marker-end="url(#s-arrow)"/>
+
+        <line x1="320" y1="432" x2="320" y2="476" stroke="#5B6570" stroke-width="1.2" marker-end="url(#s-arrow)"/>
+        <rect x="328" y="448" width="84" height="12" rx="2" fill="#faf8f5"/>
+        <text x="332" y="457" fill="#8B93A1" font-size="8" font-family="'Geist Mono', monospace" letter-spacing="0.06em">RESERVED EDITS</text>
+        <line x1="680" y1="432" x2="680" y2="476" stroke="#5B6570" stroke-width="1.2" stroke-dasharray="4,3" marker-end="url(#s-arrow)"/>
+        <line x1="520" y1="508" x2="484" y2="508" stroke="#E8552D" stroke-width="1.2" marker-end="url(#s-arrow-accent)"/>
+        <rect x="484" y="488" width="32" height="12" rx="2" fill="#faf8f5"/>
+        <text x="500" y="497" fill="#E8552D" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.06em">MERGE</text>
+
+        <!-- You -->
+        <rect x="400" y="40" width="200" height="56" rx="6" fill="#faf8f5"/>
+        <rect x="400" y="40" width="200" height="56" rx="6" fill="rgba(91,101,112,0.10)" stroke="#8B93A1" stroke-width="1"/>
+        <rect x="408" y="46" width="28" height="12" rx="2" fill="transparent" stroke="rgba(139,147,161,0.5)" stroke-width="0.8"/>
+        <text x="422" y="55" fill="#8B93A1" font-size="7" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">USER</text>
+        <text x="500" y="68" fill="#15181C" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">You</text>
+        <text x="500" y="84" fill="#5B6570" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">gt board · add · run · ok · why</text>
+
+        <!-- Core (focal) -->
+        <rect x="240" y="128" width="520" height="80" rx="6" fill="#faf8f5"/>
+        <rect x="240" y="128" width="520" height="80" rx="6" fill="rgba(232,85,45,0.08)" stroke="#E8552D" stroke-width="1"/>
+        <rect x="248" y="134" width="28" height="12" rx="2" fill="transparent" stroke="rgba(232,85,45,0.5)" stroke-width="0.8"/>
+        <text x="262" y="143" fill="#E8552D" font-size="7" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">CORE</text>
+        <text x="500" y="156" fill="#15181C" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Core</text>
+        <text x="500" y="176" fill="#5B6570" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">intake check · dispatcher · quota meter · reservations · rules delivery</text>
+        <text x="500" y="192" fill="#5B6570" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">acceptance check · holds · sandbox merge · no model, no keys</text>
+
+        <!-- Store -->
+        <rect x="800" y="136" width="160" height="64" rx="6" fill="#faf8f5"/>
+        <rect x="800" y="136" width="160" height="64" rx="6" fill="rgba(21,24,28,0.05)" stroke="#5B6570" stroke-width="1"/>
+        <rect x="808" y="142" width="36" height="12" rx="2" fill="transparent" stroke="rgba(91,101,112,0.5)" stroke-width="0.8"/>
+        <text x="826" y="151" fill="#5B6570" font-size="7" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">STORE</text>
+        <text x="880" y="172" fill="#15181C" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">State + event log</text>
+        <text x="880" y="188" fill="#5B6570" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">SQLite · local</text>
+
+        <!-- Shared tools -->
+        <rect x="240" y="256" width="240" height="56" rx="6" fill="#faf8f5"/>
+        <rect x="240" y="256" width="240" height="56" rx="6" fill="#ffffff" stroke="#15181C" stroke-width="1"/>
+        <rect x="248" y="262" width="24" height="12" rx="2" fill="transparent" stroke="rgba(21,24,28,0.4)" stroke-width="0.8"/>
+        <text x="260" y="271" fill="#15181C" font-size="7" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">MCP</text>
+        <text x="360" y="284" fill="#15181C" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Shared tools</text>
+        <text x="360" y="300" fill="#5B6570" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">claim · wait · inbox · evidence</text>
+
+        <!-- Drivers -->
+        <rect x="520" y="256" width="240" height="56" rx="6" fill="#faf8f5"/>
+        <rect x="520" y="256" width="240" height="56" rx="6" fill="#ffffff" stroke="#15181C" stroke-width="1"/>
+        <rect x="528" y="262" width="24" height="12" rx="2" fill="transparent" stroke="rgba(21,24,28,0.4)" stroke-width="0.8"/>
+        <text x="540" y="271" fill="#15181C" font-size="7" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">DRV</text>
+        <text x="640" y="284" fill="#15181C" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Drivers and bridges</text>
+        <text x="640" y="300" fill="#5B6570" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">ACP · headless · SDK · TUI · CDP</text>
+
+        <!-- Live members -->
+        <rect x="160" y="360" width="320" height="72" rx="6" fill="#faf8f5"/>
+        <rect x="160" y="360" width="320" height="72" rx="6" fill="#ffffff" stroke="#15181C" stroke-width="1"/>
+        <rect x="168" y="366" width="36" height="12" rx="2" fill="transparent" stroke="rgba(21,24,28,0.4)" stroke-width="0.8"/>
+        <text x="186" y="375" fill="#15181C" font-size="7" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">GATED</text>
+        <text x="320" y="392" fill="#15181C" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Live members</text>
+        <text x="320" y="408" fill="#5B6570" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">Claude Code · OpenCode · Codex · Qwen Code</text>
+        <text x="320" y="424" fill="#5B6570" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">reference harness for any API or local model</text>
+
+        <!-- Sandboxed members -->
+        <rect x="520" y="360" width="320" height="72" rx="6" fill="#faf8f5"/>
+        <rect x="520" y="360" width="320" height="72" rx="6" fill="rgba(21,24,28,0.02)" stroke="rgba(21,24,28,0.20)" stroke-width="1" stroke-dasharray="4,3"/>
+        <rect x="528" y="366" width="48" height="12" rx="2" fill="transparent" stroke="rgba(21,24,28,0.25)" stroke-width="0.8"/>
+        <text x="552" y="375" fill="#8B93A1" font-size="7" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">SANDBOX</text>
+        <text x="680" y="392" fill="#15181C" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Sandboxed members</text>
+        <text x="680" y="408" fill="#5B6570" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">model CLIs · SDK agents · terminal apps</text>
+        <text x="680" y="424" fill="#5B6570" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">websites over CDP or assisted</text>
+
+        <!-- Shared workspace -->
+        <rect x="160" y="480" width="320" height="56" rx="6" fill="#faf8f5"/>
+        <rect x="160" y="480" width="320" height="56" rx="6" fill="rgba(21,24,28,0.05)" stroke="#5B6570" stroke-width="1"/>
+        <rect x="168" y="486" width="20" height="12" rx="2" fill="transparent" stroke="rgba(91,101,112,0.5)" stroke-width="0.8"/>
+        <text x="178" y="495" fill="#5B6570" font-size="7" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">FS</text>
+        <text x="320" y="508" fill="#15181C" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Shared workspace</text>
+        <text x="320" y="524" fill="#5B6570" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">your repo · live edits under reservations</text>
+
+        <!-- Sandbox copies -->
+        <rect x="520" y="480" width="320" height="56" rx="6" fill="#faf8f5"/>
+        <rect x="520" y="480" width="320" height="56" rx="6" fill="rgba(21,24,28,0.02)" stroke="rgba(21,24,28,0.20)" stroke-width="1" stroke-dasharray="4,3"/>
+        <rect x="528" y="486" width="28" height="12" rx="2" fill="transparent" stroke="rgba(21,24,28,0.25)" stroke-width="0.8"/>
+        <text x="542" y="495" fill="#8B93A1" font-size="7" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">COPY</text>
+        <text x="680" y="508" fill="#15181C" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Sandbox copies</text>
+        <text x="680" y="524" fill="#5B6570" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">one per member · merged after acceptance</text>
+
+        <!-- Legend -->
+        <line x1="40" y1="568" x2="960" y2="568" stroke="rgba(21,24,28,0.10)" stroke-width="0.8"/>
+        <text x="40" y="596" fill="#5B6570" font-size="8" font-family="'Geist Mono', monospace" letter-spacing="0.14em">LEGEND</text>
+        <rect x="120" y="588" width="16" height="10" rx="2" fill="rgba(232,85,45,0.08)" stroke="#E8552D" stroke-width="1"/>
+        <text x="144" y="596" fill="#5B6570" font-size="9" font-family="'Geist', sans-serif">Core</text>
+        <rect x="200" y="588" width="16" height="10" rx="2" fill="#ffffff" stroke="#15181C" stroke-width="1"/>
+        <text x="224" y="596" fill="#5B6570" font-size="9" font-family="'Geist', sans-serif">Service or live member</text>
+        <rect x="364" y="588" width="16" height="10" rx="2" fill="rgba(21,24,28,0.05)" stroke="#5B6570" stroke-width="1"/>
+        <text x="388" y="596" fill="#5B6570" font-size="9" font-family="'Geist', sans-serif">State or workspace</text>
+        <rect x="516" y="588" width="16" height="10" rx="2" fill="rgba(21,24,28,0.02)" stroke="rgba(21,24,28,0.20)" stroke-width="1" stroke-dasharray="3,2"/>
+        <text x="540" y="596" fill="#5B6570" font-size="9" font-family="'Geist', sans-serif">Sandboxed</text>
+        <line x1="628" y1="592" x2="648" y2="592" stroke="#5B6570" stroke-width="1.2" marker-end="url(#s-arrow)"/>
+        <text x="656" y="596" fill="#5B6570" font-size="9" font-family="'Geist', sans-serif">Flow</text>
+        <line x1="704" y1="592" x2="724" y2="592" stroke="#5B6570" stroke-width="1.2" stroke-dasharray="4,3" marker-end="url(#s-arrow)"/>
+        <text x="732" y="596" fill="#5B6570" font-size="9" font-family="'Geist', sans-serif">Asks or copies</text>
+        <line x1="820" y1="592" x2="840" y2="592" stroke="#E8552D" stroke-width="1.2" marker-end="url(#s-arrow-accent)"/>
+        <text x="848" y="596" fill="#5B6570" font-size="9" font-family="'Geist', sans-serif">Merge after check</text>
+      </svg>
+    </div>
+  </section>
+
+  <!-- ============================ 2. CORE ============================ -->
+  <section>
+    <h2>2. Inside the core: one task, start to finish</h2>
+    <p class="caption">Every task passes the same four stations. Four of them can raise a hold, which is the only way the system ever asks you anything. Everything is written to the event log, so <code>gt why</code> can explain any decision.</p>
+    <div class="diagram-container">
+      <svg viewBox="0 64 1000 492" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="gt-core-title gt-core-desc">
+        <title id="gt-core-title">Core task pipeline</title>
+        <desc id="gt-core-desc">A task passes an intake contradiction check, a dispatcher fed by the quota meter, the chosen member working under reservations, and an independent acceptance check; contradictions, quota limits, held edits and failed checks become holds for the user, and every step is recorded in the event log.</desc>
+        <defs>
+          <marker id="c-arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#5B6570"/></marker>
+          <marker id="c-arrow-accent" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#E8552D"/></marker>
+        </defs>
+        <rect width="100%" height="100%" fill="#faf8f5"/>
+
+        <!-- pipeline arrows -->
+        <line x1="32" y1="128" x2="100" y2="128" stroke="#5B6570" stroke-width="1.2" marker-end="url(#c-arrow)"/>
+        <rect x="48" y="104" width="32" height="12" rx="2" fill="#faf8f5"/>
+        <text x="64" y="113" fill="#8B93A1" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.06em">TASK</text>
+        <line x1="264" y1="128" x2="316" y2="128" stroke="#5B6570" stroke-width="1.2" marker-end="url(#c-arrow)"/>
+        <rect x="272" y="104" width="36" height="12" rx="2" fill="#faf8f5"/>
+        <text x="290" y="113" fill="#8B93A1" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.06em">CLEAR</text>
+        <line x1="480" y1="128" x2="532" y2="128" stroke="#5B6570" stroke-width="1.2" marker-end="url(#c-arrow)"/>
+        <rect x="488" y="104" width="36" height="12" rx="2" fill="#faf8f5"/>
+        <text x="506" y="113" fill="#8B93A1" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.06em">START</text>
+        <line x1="696" y1="128" x2="748" y2="128" stroke="#5B6570" stroke-width="1.2" marker-end="url(#c-arrow)"/>
+        <rect x="704" y="104" width="36" height="12" rx="2" fill="#faf8f5"/>
+        <text x="722" y="113" fill="#8B93A1" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.06em">DONE?</text>
+        <line x1="912" y1="128" x2="964" y2="128" stroke="#E8552D" stroke-width="1.2" marker-end="url(#c-arrow-accent)"/>
+        <rect x="920" y="104" width="32" height="12" rx="2" fill="#faf8f5"/>
+        <text x="936" y="113" fill="#E8552D" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.06em">DONE</text>
+
+        <!-- support arrows -->
+        <line x1="400" y1="232" x2="400" y2="164" stroke="#5B6570" stroke-width="1.2" marker-end="url(#c-arrow)"/>
+        <rect x="408" y="192" width="56" height="12" rx="2" fill="#faf8f5"/>
+        <text x="412" y="201" fill="#8B93A1" font-size="8" font-family="'Geist Mono', monospace" letter-spacing="0.06em">FAILOVER</text>
+        <line x1="616" y1="160" x2="616" y2="228" stroke="#5B6570" stroke-width="1.2" marker-end="url(#c-arrow)"/>
+        <rect x="624" y="188" width="36" height="12" rx="2" fill="#faf8f5"/>
+        <text x="628" y="197" fill="#8B93A1" font-size="8" font-family="'Geist Mono', monospace" letter-spacing="0.06em">CLAIM</text>
+
+        <!-- hold arrows -->
+        <line x1="184" y1="160" x2="184" y2="348" stroke="#5B6570" stroke-width="1.2" stroke-dasharray="4,3" marker-end="url(#c-arrow)"/>
+        <rect x="192" y="248" width="80" height="12" rx="2" fill="#faf8f5"/>
+        <text x="196" y="257" fill="#8B93A1" font-size="8" font-family="'Geist Mono', monospace" letter-spacing="0.06em">CONTRADICTION</text>
+        <line x1="400" y1="296" x2="400" y2="348" stroke="#5B6570" stroke-width="1.2" stroke-dasharray="4,3" marker-end="url(#c-arrow)"/>
+        <rect x="408" y="316" width="64" height="12" rx="2" fill="#faf8f5"/>
+        <text x="412" y="325" fill="#8B93A1" font-size="8" font-family="'Geist Mono', monospace" letter-spacing="0.06em">LIMIT HIT</text>
+        <line x1="616" y1="296" x2="616" y2="348" stroke="#5B6570" stroke-width="1.2" stroke-dasharray="4,3" marker-end="url(#c-arrow)"/>
+        <rect x="624" y="316" width="60" height="12" rx="2" fill="#faf8f5"/>
+        <text x="628" y="325" fill="#8B93A1" font-size="8" font-family="'Geist Mono', monospace" letter-spacing="0.06em">HELD EDIT</text>
+        <line x1="832" y1="160" x2="832" y2="348" stroke="#5B6570" stroke-width="1.2" stroke-dasharray="4,3" marker-end="url(#c-arrow)"/>
+        <rect x="840" y="248" width="76" height="12" rx="2" fill="#faf8f5"/>
+        <text x="844" y="257" fill="#8B93A1" font-size="8" font-family="'Geist Mono', monospace" letter-spacing="0.06em">FAILED CHECK</text>
+
+        <!-- Intake -->
+        <rect x="104" y="96" width="160" height="64" rx="6" fill="#faf8f5"/>
+        <rect x="104" y="96" width="160" height="64" rx="6" fill="#ffffff" stroke="#15181C" stroke-width="1"/>
+        <rect x="112" y="102" width="36" height="12" rx="2" fill="transparent" stroke="rgba(21,24,28,0.4)" stroke-width="0.8"/>
+        <text x="130" y="111" fill="#15181C" font-size="7" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">JUDGE</text>
+        <text x="184" y="132" fill="#15181C" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Intake check</text>
+        <text x="184" y="148" fill="#5B6570" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">vs every in-flight task</text>
+
+        <!-- Dispatcher -->
+        <rect x="320" y="96" width="160" height="64" rx="6" fill="#faf8f5"/>
+        <rect x="320" y="96" width="160" height="64" rx="6" fill="#ffffff" stroke="#15181C" stroke-width="1"/>
+        <rect x="328" y="102" width="36" height="12" rx="2" fill="transparent" stroke="rgba(21,24,28,0.4)" stroke-width="0.8"/>
+        <text x="346" y="111" fill="#15181C" font-size="7" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">ROUTE</text>
+        <text x="400" y="132" fill="#15181C" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Dispatcher</text>
+        <text x="400" y="148" fill="#5B6570" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">suggests · you confirm</text>
+
+        <!-- Member works -->
+        <rect x="536" y="96" width="160" height="64" rx="6" fill="#faf8f5"/>
+        <rect x="536" y="96" width="160" height="64" rx="6" fill="#ffffff" stroke="#15181C" stroke-width="1"/>
+        <rect x="544" y="102" width="40" height="12" rx="2" fill="transparent" stroke="rgba(21,24,28,0.4)" stroke-width="0.8"/>
+        <text x="564" y="111" fill="#15181C" font-size="7" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">MEMBER</text>
+        <text x="616" y="132" fill="#15181C" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Member works</text>
+        <text x="616" y="148" fill="#5B6570" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">rules in its prompt</text>
+
+        <!-- Acceptance (focal) -->
+        <rect x="752" y="96" width="160" height="64" rx="6" fill="#faf8f5"/>
+        <rect x="752" y="96" width="160" height="64" rx="6" fill="rgba(232,85,45,0.08)" stroke="#E8552D" stroke-width="1"/>
+        <rect x="760" y="102" width="40" height="12" rx="2" fill="transparent" stroke="rgba(232,85,45,0.5)" stroke-width="0.8"/>
+        <text x="780" y="111" fill="#E8552D" font-size="7" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">VERIFY</text>
+        <text x="832" y="132" fill="#15181C" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Acceptance check</text>
+        <text x="832" y="148" fill="#5B6570" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">done list vs final state</text>
+
+        <!-- Quota meter -->
+        <rect x="320" y="232" width="160" height="64" rx="6" fill="#faf8f5"/>
+        <rect x="320" y="232" width="160" height="64" rx="6" fill="#ffffff" stroke="#15181C" stroke-width="1"/>
+        <rect x="328" y="238" width="36" height="12" rx="2" fill="transparent" stroke="rgba(21,24,28,0.4)" stroke-width="0.8"/>
+        <text x="346" y="247" fill="#15181C" font-size="7" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">QUOTA</text>
+        <text x="400" y="268" fill="#15181C" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Quota meter</text>
+        <text x="400" y="284" fill="#5B6570" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">limits · resets · pace</text>
+
+        <!-- Reservations -->
+        <rect x="536" y="232" width="160" height="64" rx="6" fill="#faf8f5"/>
+        <rect x="536" y="232" width="160" height="64" rx="6" fill="#ffffff" stroke="#15181C" stroke-width="1"/>
+        <rect x="544" y="238" width="36" height="12" rx="2" fill="transparent" stroke="rgba(21,24,28,0.4)" stroke-width="0.8"/>
+        <text x="562" y="247" fill="#15181C" font-size="7" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">LOCKS</text>
+        <text x="616" y="268" fill="#15181C" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Reservations</text>
+        <text x="616" y="284" fill="#5B6570" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">action record · merge</text>
+
+        <!-- Holds -->
+        <rect x="104" y="352" width="808" height="56" rx="6" fill="#faf8f5"/>
+        <rect x="104" y="352" width="808" height="56" rx="6" fill="rgba(91,101,112,0.10)" stroke="#8B93A1" stroke-width="1"/>
+        <rect x="112" y="358" width="28" height="12" rx="2" fill="transparent" stroke="rgba(139,147,161,0.5)" stroke-width="0.8"/>
+        <text x="126" y="367" fill="#8B93A1" font-size="7" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">HOLD</text>
+        <text x="508" y="380" fill="#15181C" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Holds: one key from you</text>
+        <text x="508" y="396" fill="#5B6570" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">contradiction · quota failover · held edit · failed check · irreversible action (always asks)</text>
+
+        <!-- Event log -->
+        <rect x="104" y="432" width="808" height="48" rx="6" fill="#faf8f5"/>
+        <rect x="104" y="432" width="808" height="48" rx="6" fill="rgba(21,24,28,0.05)" stroke="#5B6570" stroke-width="1"/>
+        <rect x="112" y="438" width="24" height="12" rx="2" fill="transparent" stroke="rgba(91,101,112,0.5)" stroke-width="0.8"/>
+        <text x="124" y="447" fill="#5B6570" font-size="7" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">LOG</text>
+        <text x="508" y="456" fill="#15181C" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Event log</text>
+        <text x="508" y="472" fill="#5B6570" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">every task, claim, check and answer is recorded · gt why reads it</text>
+
+        <!-- Legend -->
+        <line x1="40" y1="508" x2="960" y2="508" stroke="rgba(21,24,28,0.10)" stroke-width="0.8"/>
+        <text x="40" y="536" fill="#5B6570" font-size="8" font-family="'Geist Mono', monospace" letter-spacing="0.14em">LEGEND</text>
+        <rect x="120" y="528" width="16" height="10" rx="2" fill="rgba(232,85,45,0.08)" stroke="#E8552D" stroke-width="1"/>
+        <text x="144" y="536" fill="#5B6570" font-size="9" font-family="'Geist', sans-serif">Source of truth for done</text>
+        <rect x="284" y="528" width="16" height="10" rx="2" fill="#ffffff" stroke="#15181C" stroke-width="1"/>
+        <text x="308" y="536" fill="#5B6570" font-size="9" font-family="'Geist', sans-serif">Core station</text>
+        <rect x="396" y="528" width="16" height="10" rx="2" fill="rgba(91,101,112,0.10)" stroke="#8B93A1" stroke-width="1"/>
+        <text x="420" y="536" fill="#5B6570" font-size="9" font-family="'Geist', sans-serif">You</text>
+        <rect x="464" y="528" width="16" height="10" rx="2" fill="rgba(21,24,28,0.05)" stroke="#5B6570" stroke-width="1"/>
+        <text x="488" y="536" fill="#5B6570" font-size="9" font-family="'Geist', sans-serif">Store</text>
+        <line x1="544" y1="532" x2="564" y2="532" stroke="#5B6570" stroke-width="1.2" marker-end="url(#c-arrow)"/>
+        <text x="572" y="536" fill="#5B6570" font-size="9" font-family="'Geist', sans-serif">Task flow</text>
+        <line x1="644" y1="532" x2="664" y2="532" stroke="#5B6570" stroke-width="1.2" stroke-dasharray="4,3" marker-end="url(#c-arrow)"/>
+        <text x="672" y="536" fill="#5B6570" font-size="9" font-family="'Geist', sans-serif">Raises a hold</text>
+      </svg>
+    </div>
+  </section>
+
+  <!-- ============================ 3. ONBOARDING ============================ -->
+  <section>
+    <h2>3. Onboarding: how anything becomes a member</h2>
+    <p class="caption"><code>gt add &lt;anything&gt;</code>. Protocol speakers go straight to a bridge. Everything else goes to the onboarding agent, which reads the help text, README or page and writes a driver spec. Nothing is enrolled until it passes conformance, and a version change or rising failures send it back for repair.</p>
+    <div class="diagram-container">
+      <svg viewBox="0 0 1000 400" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="gt-onboard-title gt-onboard-desc">
+        <title id="gt-onboard-title">Onboarding pipeline</title>
+        <desc id="gt-onboard-desc">Any surface is classified; protocol speakers bridge straight to a driver spec, others go through the onboarding agent which writes one; the spec must pass conformance before the member is enrolled, failures and later updates loop back to the agent for repair.</desc>
+        <defs>
+          <marker id="o-arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#5B6570"/></marker>
+          <marker id="o-arrow-accent" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#E8552D"/></marker>
+        </defs>
+        <rect width="100%" height="100%" fill="#faf8f5"/>
+
+        <!-- arrows -->
+        <line x1="200" y1="152" x2="236" y2="152" stroke="#5B6570" stroke-width="1.2" marker-end="url(#o-arrow)"/>
+        <line x1="384" y1="152" x2="420" y2="152" stroke="#5B6570" stroke-width="1.2" marker-end="url(#o-arrow)"/>
+        <line x1="584" y1="152" x2="620" y2="152" stroke="#5B6570" stroke-width="1.2" marker-end="url(#o-arrow)"/>
+        <line x1="768" y1="152" x2="804" y2="152" stroke="#5B6570" stroke-width="1.2" marker-end="url(#o-arrow)"/>
+        <!-- bridge: classify top -> spec top -->
+        <path d="M 312,120 V 72 Q 312,64 320,64 H 688 Q 696,64 696,72 V 116" fill="none" stroke="#5B6570" stroke-width="1.2" marker-end="url(#o-arrow)"/>
+        <rect x="480" y="44" width="44" height="12" rx="2" fill="#faf8f5"/>
+        <text x="502" y="53" fill="#8B93A1" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.06em">BRIDGE</text>
+        <!-- pass -->
+        <line x1="904" y1="184" x2="904" y2="244" stroke="#E8552D" stroke-width="1.2" marker-end="url(#o-arrow-accent)"/>
+        <rect x="912" y="208" width="32" height="12" rx="2" fill="#faf8f5"/>
+        <text x="916" y="217" fill="#E8552D" font-size="8" font-family="'Geist Mono', monospace" letter-spacing="0.06em">PASS</text>
+        <!-- fail: conformance bottom -> agent bottom -->
+        <path d="M 832,184 V 208 Q 832,216 824,216 H 536 Q 528,216 528,208 V 188" fill="none" stroke="#5B6570" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#o-arrow)"/>
+        <rect x="664" y="196" width="32" height="12" rx="2" fill="#faf8f5"/>
+        <text x="680" y="205" fill="#8B93A1" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.06em">FAIL</text>
+        <!-- enrolled -> watcher -->
+        <line x1="808" y1="280" x2="588" y2="280" stroke="#5B6570" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#o-arrow)"/>
+        <rect x="672" y="260" width="48" height="12" rx="2" fill="#faf8f5"/>
+        <text x="696" y="269" fill="#8B93A1" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.06em">UPDATES</text>
+        <!-- watcher -> agent -->
+        <line x1="480" y1="248" x2="480" y2="188" stroke="#5B6570" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#o-arrow)"/>
+        <rect x="428" y="224" width="44" height="12" rx="2" fill="#faf8f5"/>
+        <text x="468" y="233" fill="#8B93A1" font-size="8" font-family="'Geist Mono', monospace" text-anchor="end" letter-spacing="0.06em">REPAIR</text>
+
+        <!-- Any surface -->
+        <rect x="40" y="120" width="160" height="64" rx="6" fill="#faf8f5"/>
+        <rect x="40" y="120" width="160" height="64" rx="6" fill="rgba(91,101,112,0.10)" stroke="#8B93A1" stroke-width="1"/>
+        <rect x="48" y="126" width="20" height="12" rx="2" fill="transparent" stroke="rgba(139,147,161,0.5)" stroke-width="0.8"/>
+        <text x="58" y="135" fill="#8B93A1" font-size="7" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">IN</text>
+        <text x="120" y="156" fill="#15181C" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Any surface</text>
+        <text x="120" y="172" fill="#5B6570" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">CLI · SDK · API · TUI · site</text>
+
+        <!-- Classify -->
+        <rect x="240" y="120" width="144" height="64" rx="6" fill="#faf8f5"/>
+        <rect x="240" y="120" width="144" height="64" rx="6" fill="#ffffff" stroke="#15181C" stroke-width="1"/>
+        <rect x="248" y="126" width="24" height="12" rx="2" fill="transparent" stroke="rgba(21,24,28,0.4)" stroke-width="0.8"/>
+        <text x="260" y="135" fill="#15181C" font-size="7" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">ADD</text>
+        <text x="312" y="156" fill="#15181C" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Classify</text>
+        <text x="312" y="172" fill="#5B6570" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">speaks a protocol?</text>
+
+        <!-- Onboarding agent -->
+        <rect x="424" y="120" width="160" height="64" rx="6" fill="#faf8f5"/>
+        <rect x="424" y="120" width="160" height="64" rx="6" fill="#ffffff" stroke="#15181C" stroke-width="1"/>
+        <rect x="432" y="126" width="36" height="12" rx="2" fill="transparent" stroke="rgba(21,24,28,0.4)" stroke-width="0.8"/>
+        <text x="450" y="135" fill="#15181C" font-size="7" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">AGENT</text>
+        <text x="504" y="156" fill="#15181C" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Onboarding agent</text>
+        <text x="504" y="172" fill="#5B6570" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">reads help, README, page</text>
+
+        <!-- Driver spec -->
+        <rect x="624" y="120" width="144" height="64" rx="6" fill="#faf8f5"/>
+        <rect x="624" y="120" width="144" height="64" rx="6" fill="rgba(21,24,28,0.05)" stroke="#5B6570" stroke-width="1"/>
+        <rect x="632" y="126" width="28" height="12" rx="2" fill="transparent" stroke="rgba(91,101,112,0.5)" stroke-width="0.8"/>
+        <text x="646" y="135" fill="#5B6570" font-size="7" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">SPEC</text>
+        <text x="696" y="156" fill="#15181C" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Driver spec</text>
+        <text x="696" y="172" fill="#5B6570" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">JSON or SDK shim</text>
+
+        <!-- Conformance -->
+        <rect x="808" y="120" width="152" height="64" rx="6" fill="#faf8f5"/>
+        <rect x="808" y="120" width="152" height="64" rx="6" fill="#ffffff" stroke="#15181C" stroke-width="1"/>
+        <rect x="816" y="126" width="28" height="12" rx="2" fill="transparent" stroke="rgba(21,24,28,0.4)" stroke-width="0.8"/>
+        <text x="830" y="135" fill="#15181C" font-size="7" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">TEST</text>
+        <text x="884" y="156" fill="#15181C" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Conformance</text>
+        <text x="884" y="172" fill="#5B6570" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">proves level L0 to L3</text>
+
+        <!-- Enrolled (focal) -->
+        <rect x="808" y="248" width="152" height="64" rx="6" fill="#faf8f5"/>
+        <rect x="808" y="248" width="152" height="64" rx="6" fill="rgba(232,85,45,0.08)" stroke="#E8552D" stroke-width="1"/>
+        <rect x="816" y="254" width="40" height="12" rx="2" fill="transparent" stroke="rgba(232,85,45,0.5)" stroke-width="0.8"/>
+        <text x="836" y="263" fill="#E8552D" font-size="7" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">MEMBER</text>
+        <text x="884" y="284" fill="#15181C" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Enrolled</text>
+        <text x="884" y="300" fill="#5B6570" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">level · rules channel</text>
+
+        <!-- Watcher -->
+        <rect x="424" y="248" width="160" height="64" rx="6" fill="#faf8f5"/>
+        <rect x="424" y="248" width="160" height="64" rx="6" fill="rgba(21,24,28,0.02)" stroke="rgba(21,24,28,0.20)" stroke-width="1" stroke-dasharray="4,3"/>
+        <rect x="432" y="254" width="36" height="12" rx="2" fill="transparent" stroke="rgba(21,24,28,0.25)" stroke-width="0.8"/>
+        <text x="450" y="263" fill="#8B93A1" font-size="7" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">WATCH</text>
+        <text x="504" y="284" fill="#15181C" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Watcher</text>
+        <text x="504" y="300" fill="#5B6570" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">version change · failures</text>
+
+        <!-- Legend -->
+        <line x1="40" y1="348" x2="960" y2="348" stroke="rgba(21,24,28,0.10)" stroke-width="0.8"/>
+        <text x="40" y="376" fill="#5B6570" font-size="8" font-family="'Geist Mono', monospace" letter-spacing="0.14em">LEGEND</text>
+        <rect x="120" y="368" width="16" height="10" rx="2" fill="rgba(232,85,45,0.08)" stroke="#E8552D" stroke-width="1"/>
+        <text x="144" y="376" fill="#5B6570" font-size="9" font-family="'Geist', sans-serif">Ready to take tasks</text>
+        <rect x="268" y="368" width="16" height="10" rx="2" fill="#ffffff" stroke="#15181C" stroke-width="1"/>
+        <text x="292" y="376" fill="#5B6570" font-size="9" font-family="'Geist', sans-serif">Step</text>
+        <rect x="336" y="368" width="16" height="10" rx="2" fill="rgba(21,24,28,0.05)" stroke="#5B6570" stroke-width="1"/>
+        <text x="360" y="376" fill="#5B6570" font-size="9" font-family="'Geist', sans-serif">Artifact</text>
+        <line x1="424" y1="372" x2="444" y2="372" stroke="#5B6570" stroke-width="1.2" marker-end="url(#o-arrow)"/>
+        <text x="452" y="376" fill="#5B6570" font-size="9" font-family="'Geist', sans-serif">Onboarding</text>
+        <line x1="532" y1="372" x2="552" y2="372" stroke="#5B6570" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#o-arrow)"/>
+        <text x="560" y="376" fill="#5B6570" font-size="9" font-family="'Geist', sans-serif">Repair loop</text>
+      </svg>
+    </div>
+  </section>
+
+  <!-- ============================ 4. SURFACES ============================ -->
+  <section>
+    <h2>4. Every surface, one way in</h2>
+    <p class="caption">How much a member can be steered depends on its surface. Whether it can join never does.</p>
+    <table>
+      <thead><tr><th>Surface</th><th>Examples</th><th>Joins through</th><th>Rules reach it via</th><th>Governed as</th></tr></thead>
+      <tbody>
+        <tr><td>Protocol speaker</td><td>OpenCode, Codex, A2A agents, OpenAI-compatible endpoints</td><td>Bridge (no per-member work)</td><td>Session prompt + injected tools</td><td>Live, gated</td></tr>
+        <tr><td>Headless CLI</td><td>Claude Code, Gemini or Antigravity CLI, Qwen Code, Crush, Goose, Aider</td><td>Onboarding agent reads <code>--help</code></td><td>System prompt flag or prompt prefix</td><td>Live via hooks or permissions, else sandbox</td></tr>
+        <tr><td>Favourite model CLI</td><td><code>llm</code>, <code>aichat</code>, <code>mods</code>, <code>fabric</code>, <code>ollama run</code></td><td>Onboarding agent</td><td>Prompt prefix</td><td>Sandbox + merge</td></tr>
+        <tr><td>SDK or library</td><td>Claude Agent SDK, OpenAI Agents SDK, Vercel AI SDK, LangGraph, your own agent</td><td>Onboarding agent writes a shim from the README</td><td>System prompt parameter</td><td>Sandbox, live if the SDK has an approval hook</td></tr>
+        <tr><td>Bare model or API key</td><td>Ollama, OpenRouter, Z.ai API, Gemini API</td><td>Reference harness</td><td>Native</td><td>Live, fully gated</td></tr>
+        <tr><td>Terminal-only app</td><td>Any TUI without a headless mode</td><td>Virtual terminal driver</td><td>Typed as the first message</td><td>Sandbox + merge</td></tr>
+        <tr><td>Website</td><td>z.ai chat, Gemini in search, ChatGPT, local Open WebUI</td><td>Free API twin first, then CDP (opt-in, your session, human pace, no bot evasion), then assisted</td><td>Prompt prefix</td><td>Sandbox + merge</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ============================ 5. CARDS ============================ -->
+  <section>
+    <h2>5. Proven, planned, and fixed</h2>
+    <div class="cards">
+      <div class="card">
+        <p class="card-eyebrow">Tested 2026-10-12</p>
+        <div class="card-header"><span class="card-dot coral"></span><h3>What the tests proved</h3></div>
+        <ul>
+          <li>Rules in the prompt channel: <span class="num">18/18</span> followed; in tool descriptions only <span class="num">5/18</span></li>
+          <li>Live two-agent trials: whole work wiped <span class="num">2/6</span> without protocol, <span class="num">0/12</span> with</li>
+          <li>Intake check on blind pairs: <span class="num">14/14</span> contradictions caught, <span class="num">1/14</span> false flag</li>
+          <li>Agents said done <span class="num">36/36</span>, really done <span class="num">19/36</span>; acceptance check caught <span class="num">17/17</span></li>
+          <li>Onboarding from help text: <span class="num">3/3</span> passed conformance first try</li>
+        </ul>
+      </div>
+      <div class="card">
+        <p class="card-eyebrow">v0 build order</p>
+        <div class="card-header"><span class="card-dot ink"></span><h3>What gets built first</h3></div>
+        <ol>
+          <li>Core store, event log, task and result shapes</li>
+          <li>Bridges and the reference harness</li>
+          <li>Onboarding agent + conformance for CLI, SDK, TUI</li>
+          <li>Rules delivery, shared tools, reservations</li>
+          <li>Intake check and acceptance check</li>
+          <li>Quota meter and failover</li>
+          <li>Sandbox + merge, website doors</li>
+          <li>Board and <code>gt.yaml</code></li>
+        </ol>
+      </div>
+      <div class="card">
+        <p class="card-eyebrow">Stable contracts</p>
+        <div class="card-header"><span class="card-dot muted"></span><h3>What never changes</h3></div>
+        <ul>
+          <li>Task shape: goal, done list, resources</li>
+          <li>Result shape: status, content, evidence</li>
+          <li>Five hold types, one key each</li>
+          <li>Levels L0 to L4</li>
+          <li>Everything else is swappable: drivers, judge models, board, bridges</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <div class="footer">
+    <span>God Tier · harness of harnesses · design draft</span>
+    <span>Source: ARCHITECTURE.md, ABSTRACTIONS.md</span>
+  </div>
+</div>
+</body>
+</html>

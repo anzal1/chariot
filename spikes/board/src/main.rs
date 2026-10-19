@@ -20,10 +20,30 @@ struct Member {
 }
 
 const MEMBERS: &[Member] = &[
-    Member { name: "Claude Code", detail: "Claude Max · 61% quota left", level: "L2", live: true },
-    Member { name: "OpenCode", detail: "GLM Coding Plan", level: "L2", live: true },
-    Member { name: "Ollama", detail: "local models", level: "L1", live: true },
-    Member { name: "z.ai chat", detail: "website · assisted", level: "L0", live: false },
+    Member {
+        name: "Claude Code",
+        detail: "Claude Max · 61% quota left",
+        level: "L2",
+        live: true,
+    },
+    Member {
+        name: "OpenCode",
+        detail: "GLM Coding Plan",
+        level: "L2",
+        live: true,
+    },
+    Member {
+        name: "Ollama",
+        detail: "local models",
+        level: "L1",
+        live: true,
+    },
+    Member {
+        name: "z.ai chat",
+        detail: "website · assisted",
+        level: "L0",
+        live: false,
+    },
 ];
 
 struct Board {
@@ -44,8 +64,18 @@ impl Board {
             .child(
                 v_flex()
                     .gap_0p5()
-                    .child(div().text_sm().font_weight(FontWeight::MEDIUM).child(m.name))
-                    .child(div().text_xs().text_color(theme.muted_foreground).child(m.detail)),
+                    .child(
+                        div()
+                            .text_sm()
+                            .font_weight(FontWeight::MEDIUM)
+                            .child(m.name),
+                    )
+                    .child(
+                        div()
+                            .text_xs()
+                            .text_color(theme.muted_foreground)
+                            .child(m.detail),
+                    ),
             )
             .child(
                 h_flex()
@@ -72,13 +102,15 @@ impl Board {
         let theme = cx.theme();
         let body = v_flex()
             .gap_1()
-            .child(div().text_sm().font_weight(FontWeight::MEDIUM).child("Hold 16 · OpenCode wants to rewrite calc.js lines 10-40"))
             .child(
                 div()
-                    .text_xs()
-                    .text_color(theme.muted_foreground)
-                    .child("Claude Code wrote those lines 8 minutes ago for task 9 and has not replied."),
-            );
+                    .text_sm()
+                    .font_weight(FontWeight::MEDIUM)
+                    .child("Hold 16 · OpenCode wants to rewrite calc.js lines 10-40"),
+            )
+            .child(div().text_xs().text_color(theme.muted_foreground).child(
+                "Claude Code wrote those lines 8 minutes ago for task 9 and has not replied.",
+            ));
         let footer = match self.hold {
             HoldState::Open => h_flex()
                 .gap_2()
@@ -100,8 +132,14 @@ impl Board {
                             cx.notify();
                         })),
                 ),
-            HoldState::Allowed => h_flex().child(div().text_xs().child("Allowed. OpenCode continues.")),
-            HoldState::Denied => h_flex().child(div().text_xs().child("Denied. OpenCode did the rest and left a note.")),
+            HoldState::Allowed => {
+                h_flex().child(div().text_xs().child("Allowed. OpenCode continues."))
+            }
+            HoldState::Denied => h_flex().child(
+                div()
+                    .text_xs()
+                    .child("Denied. OpenCode did the rest and left a note."),
+            ),
         };
         v_flex()
             .gap_3()
@@ -132,8 +170,18 @@ impl Render for Board {
             .child(
                 v_flex()
                     .gap_1()
-                    .child(div().text_lg().font_weight(FontWeight::SEMIBOLD).child("Chariot"))
-                    .child(div().text_xs().text_color(muted).child("4 members · 1 hold waiting on you")),
+                    .child(
+                        div()
+                            .text_lg()
+                            .font_weight(FontWeight::SEMIBOLD)
+                            .child("Chariot"),
+                    )
+                    .child(
+                        div()
+                            .text_xs()
+                            .text_color(muted)
+                            .child("4 members · 1 hold waiting on you"),
+                    ),
             )
             .child(self.hold_card(cx))
             .child(
@@ -155,7 +203,11 @@ fn main() {
                 ..Default::default()
             },
             cx,
-            |_, cx| cx.new(|_| Board { hold: HoldState::Open }),
+            |_, cx| {
+                cx.new(|_| Board {
+                    hold: HoldState::Open,
+                })
+            },
         )
         .expect("failed to open window");
     });

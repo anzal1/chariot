@@ -4,3 +4,4 @@ node_modules/
 **/ws/
 **/work/
 target/
+*.noindex/

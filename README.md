@@ -54,3 +54,7 @@ cargo run -p acp-gate -- "opencode acp" <workspace> <reserved file> "<prompt>"
 
 - **Autonomy:** a god model decides and manages by default: routing, splitting work, resolving what it can. Every decision is logged and explainable with `chariot why`, and only the five hold types reach the human. The model is a swappable member, so a better one can take the seat.
 - **The UI must be beautiful.** The spikes use the stock component look; the real board gets its own design (Geist and Geist Mono, subtle radii, restraint).
+
+## License
+
+Apache-2.0. See [LICENSE](LICENSE).

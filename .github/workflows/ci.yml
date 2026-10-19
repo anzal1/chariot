@@ -1,0 +1,40 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  # Branches and PRs cancel superseded runs; main never cancels in progress.
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  core:
+    name: fmt, prose, clippy, tests (core crates)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt, clippy
+      - uses: Swatinem/rust-cache@v2
+      - run: scripts/prose-lint.sh
+      - run: cargo fmt --all --check
+      - run: cargo clippy -p chariot-core -p acp-gate --all-targets -- -D warnings
+      - run: cargo test -p chariot-core -p acp-gate -- --test-threads=4
+
+  board:
+    name: GPUI board builds (macOS)
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: clippy
+      - uses: Swatinem/rust-cache@v2
+      - run: cargo clippy -p board -- -D warnings

@@ -17,9 +17,9 @@ Checked against T3 Code, Zed, Cursor, Conductor, Superset, Warp, the Codex app, 
 | Agents on the same files without clobbering | Nobody | Reservations, held edits, revert detection |
 | Contradicting tasks caught before work starts | Nobody | Intake check (14/14 in tests) |
 | "Done" verified against the final state | Nobody fully | Acceptance check (caught 17/17 false "done") |
-| Failover across subscriptions and harnesses | T3 waits for reset; Claudexor rotates accounts | Hands the task to another member with context |
+| Failover across subscriptions and harnesses | T3 waits for reset; Claudexor rotates accounts; Cindy fails over across provider groups for Claude Code, Codex and Pi | Hands the task to any member, any vendor, with context |
 | Onboarding any CLI, SDK or website | ACP only, or hand-written adapters | Onboarding agent writes the driver (3/3 first try) |
-| An autonomous god model with guardrails | Delegation without guardrails | Decides by default; holds and `chariot why` keep it honest |
+| An autonomous god model with guardrails | Cindy has a lead model that splits and accepts its own workers' work; others delegate without guardrails | Decides by default; holds, independent verification and `chariot why` keep it honest |
 | Native GPU UI | Mostly Electron | GPUI |
 
 ## The app
